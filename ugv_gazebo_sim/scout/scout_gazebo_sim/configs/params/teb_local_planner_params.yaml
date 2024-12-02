@@ -1,0 +1,130 @@
+# ===============Robot Configuration Parameters====================
+acc_lim_x: 0.5
+acc_lim_theta: 0.5
+max_vel_x: 0.4
+max_vel_x_backwards: 0.2
+max_vel_theta: 0.3
+
+# The following parameters are relevant only for carlike robots:
+min_turning_radius: 0.0
+
+# Minimum turning radius of a carlike robot (set to zero for a diff-drive robot).
+wheelbase: 1.0
+cmd_angle_instead_rotvel: false
+
+#The following parameters are relevant only for holonomic robots: New in ROS kinetic
+# Note, reduce weight_kinematics_nh significantly in order to adjust the tradeoff between
+# compliant longitudinal motion and non-compliant lateral motion (strafing).
+max_vel_y: 0.0
+
+#Maximum strafing velocity of the robot (should be zero for non-holonomic robots!)
+acc_lim_y: 0.5
+
+# Maximum strafing acceleration of the robot
+# The following parameters are relevant for the footprint model used for optimization
+footprint_model/type: "point"
+#Different types are "point", "circular", "line", "two_circles" and "polygon."
+
+# for type "circular"
+footprint_model/radius (double, default: 0.2)
+
+# for type "line"
+footprint_model/line_start: [-0.3, 0.0]
+footprint_model/line_end: [0.3, 0.0]
+
+# for type "two_circles"
+footprint_model/front_offset: 0.2
+footprint_model/front_radius: 0.2
+footprint_model/rear_offset: 0.2
+footprint_model/rear_radius: 0.2
+
+# for type "polygon"
+footprint_model/vertices: [ [0.25,-0.05], [...], ...]
+is_footprint_dynamic: false
+
+# ==============Goal Tolerance Parameters====================
+xy_goal_tolerance: 0.2
+yaw_goal_tolerance: 0.2
+free_goal_vel: false
+
+
+# ============Trajectory Configuration Parameters================
+dt_ref: 0.3
+dt_hysteresis: 0.1
+min_samples: 3
+global_plan_overwrite_orientation: true
+global_plan_viapoint_sep: -0.1
+max_global_plan_lookahead_dist: 3.0
+force_reinit_new_goal_dist: 1.0
+feasibility_check_no_poses: 4
+publish_feedback: false
+shrink_horizon_backup: true
+
+allow_init_with_backwards_motion: false
+
+exact_arc_length: false
+shrink_horizon_min_duration: 10.0
+
+# =================Obstacle Parameters====================
+min_obstacle_dist: 0.5
+
+include_costmap_obstacles: true
+costmap_obstacles_behind_robot_dist: 1.0
+obstacle_poses_affected: 30
+inflation_dist: 0.6
+
+include_dynamic_obstacles: false
+
+legacy_obstacle_association: false
+obstacle_association_force_inclusion_factor: 1.5
+obstacle_association_cutoff_factor: 5
+
+costmap_converter_plugin: ""
+
+costmap_converter_spin_thread: true
+costmap_converter_rate: 5.0
+
+# ===============Optimization Parameters====================
+no_inner_iterations: 5
+
+no_outer_iterations: 4
+penalty_epsilon: 0.1
+weight_max_vel_x: 2.0
+weight_max_vel_theta: 1.0
+weight_acc_lim_x: 1.0
+weight_acc_lim_theta: 1.0
+weight_kinematics_nh: 1000.0
+weight_kinematics_forward_drive: 1.0
+weight_kinematics_turning_radius: 1.0
+weight_optimaltime: 1.0
+weight_obstacle: 50.0
+weight_viapoint: 1.0
+weight_inflation: 0.1
+weight_adapt_factor: 2.0
+
+# Some special weights (currently weight_obstacle) are repeatedly scaled by this factor in each outer TEB iteration (weight_new = weight_old*factor). Increasing weights iteratively instead of setting a huge value a-priori leads to better numerical conditions of the underlying optimization problem.
+# Parallel Planning in distinctive Topologies
+enable_homotopy_class_planning: true
+
+# Activate parallel planning in distinctive topologies (requires much more CPU resources, since multiple trajectories are optimized at once)
+enable_multithreading: true
+max_number_classes: 4
+selection_cost_hysteresis: 1.0
+selection_obst_cost_scale: 100.0
+selection_viapoint_cost_scale: 1.0
+selection_alternative_time_cost: false
+roadmap_graph_no_samples: 15
+roadmap_graph_area_width: 6
+h_signature_prescaler: 1.0
+
+# Scale internal parameter (H-signature) that is used to distinguish between homotopy classes. Warning: reduce this parameter only, if you observe problems with too many obstacles in the local cost map, do not choose it extremly low, otherwise obstacles cannot be distinguished from each other (0.2<value<=1).
+h_signature_threshold: 0.1
+obstacle_heading_threshold: 1.0
+visualize_hc_graph: false
+viapoints_all_candidates: true
+switching_blocking_period: 0.0
+
+
+# =====================Miscellaneous Parameters=====================
+odom_topic: "odom"
+map_frame: "odom"

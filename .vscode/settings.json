@@ -1,0 +1,14 @@
+{
+  "python.autoComplete.extraPaths": [
+    "/home/longfei/workspace2025/Patrol_vehicle/patrol_ws/devel/lib/python3/dist-packages",
+    "/home/longfei/cartographer/install_isolated/lib/python3/dist-packages",
+    "/home/longfei/workspace/barn_AIMS/jackal_ws/devel/lib/python3/dist-packages",
+    "/opt/ros/noetic/lib/python3/dist-packages"
+  ],
+  "python.analysis.extraPaths": [
+    "/home/longfei/workspace2025/Patrol_vehicle/patrol_ws/devel/lib/python3/dist-packages",
+    "/home/longfei/cartographer/install_isolated/lib/python3/dist-packages",
+    "/home/longfei/workspace/barn_AIMS/jackal_ws/devel/lib/python3/dist-packages",
+    "/opt/ros/noetic/lib/python3/dist-packages"
+  ]
+}

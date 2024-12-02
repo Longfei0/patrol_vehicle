@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--
+    As you add to this URDF, please be aware that both the robot and
+    simulation include it. You must retain compatibility with all of
+    the following launch files:
+
+    jackal_viz/launch/view_model.launch
+    jackal_gazebo/launch/jackal_world.launch
+    jackal_base/launch/base.launch
+  -->
+  <xacro:include filename="$(find scout_description)/urdf/accessories/mid360.urdf.xacro"/>
+  <xacro:include filename="$(find scout_description)/urdf/accessories/hokuyo_ust10.urdf.xacro"/>
+
+  <!--
+    Add Microstrain IMU. By default the Jackal comes equipped with an IMU linked to "imu_link". These extra
+    optional microstrain IMU's will be added to another frame, by default, "microstrain_link".
+  -->
+  <xacro:if value="$(optenv JACKAL_IMU_MICROSTRAIN 0)">
+    <xacro:property name="frame" value="$(optenv JACKAL_IMU_MICROSTRAIN_LINK microstrain_link)"/>
+    <xacro:property name="parent" value="$(optenv JACKAL_IMU_MICROSTRAIN_PARENT base_link)"/>
+    <xacro:property name="xyz" value="$(optenv JACKAL_IMU_MICROSTRAIN_OFFSET -0.139 0.096 0.100)"/>
+    <xacro:property name="rpy" value="$(optenv JACKAL_IMU_MICROSTRAIN_RPY ${PI} 0 -${PI/2})"/>
+    <link name="${frame}" />
+    <joint name="${frame}_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${frame}" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+  </xacro:if>
+
+
+
+  <!-- Add a NUC to the Jackal. By default the Jackal comes equipped with a NUC linked to "nuc_link".-->
+  <link name="nuc_link">
+    <inertial>
+      <mass value="0.66" />
+      <origin xyz="0.0 0.0 0.03" />
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.03" rpy="0 0 0" />
+      <geometry>
+        <box size="0.13 0.13 0.06"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.03" rpy="0 0 0" />
+      <geometry>
+        <box size="0.13 0.13 0.06"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="nuc_joint" type="fixed">
+    <origin xyz="0 0 0.055" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="nuc_link" />
+  </joint>
+
+  <!-- 3D lidar -->
+  <xacro:if value="$(optenv MOUNT_LASER 1)">
+    <xacro:mid_360_mount topic="/scan" prefix="livox" parent_link="nuc_link">
+      <origin xyz="$(optenv LASER_OFFSET 0 0 0.085)" rpy="$(optenv LASER_RPY 0 0 0)" />
+    </xacro:mid_360_mount>
+  </xacro:if>
+
+  <!-- Hokuyo UST10 -->
+  <xacro:if value="$(optenv 2D_LASER 1)">
+    <xacro:hokuyo_ust10_mount topic="front/scan" prefix="front" parent_link="nuc_link">
+      <origin xyz="$(optenv JACKAL_LASER_OFFSET 0 0 0.085)" rpy="$(optenv JACKAL_LASER_RPY 0 0 0)" />
+    </xacro:hokuyo_ust10_mount>
+  </xacro:if>
+
+</robot>

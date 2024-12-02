@@ -1,0 +1,22 @@
+<launch>
+
+    <arg name="robot_namespace" default="/"/>
+
+    <!-- Load the surrounding environment into Gazebo -->
+    <arg name="world_name" default="$(find jackal_gazebo)/worlds/jackal_race.world"/>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <include file="$(find scout_gazebo_sim)/launch/spawn_scout_mini.launch"></include>
+
+    <node pkg="scout_gazebo_sim" type="odom_gt_publish.py" name="odom_to_tf_publisher" output="screen"/>
+
+    <node pkg="jackal_helper" type="collision_publisher_node" name="collision_publisher_node" />
+
+</launch>
